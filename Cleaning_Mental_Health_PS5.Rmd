@@ -1,0 +1,164 @@
+---
+title: "Cleaning_Mental_Health_PS5"
+author: "Alen Mitrovski"
+date: "09/12/2020"
+output: pdf_document
+---
+
+#### Workspace set-up ####
+library(janitor)
+library(tidyverse)
+
+raw_data <- read_csv("cchs.csv")
+
+### Select Variables from data ###
+cchs <- raw_data %>% 
+  select(CASEID,
+         alc_010,
+         alc_015,
+         alwdvdly,
+         alwdvwky,
+         ccc_015,
+         ccc_030,
+         ccc_035,
+         ccc_040,
+         ccc_045,
+         ccc_065,
+         ccc_085,
+         ccc_095,
+         ccc_140,
+         ccc_135,
+         ccc_170,
+         ccc_200,
+         cp2g030,
+         dhhgage,
+         dhh_sex,
+         drgdvla,
+         drgdvlac,
+         drgdvlca,
+         drgdvlcm,
+         drgdvyac,
+         gen_005,
+         gen_015,
+         gen_020,
+         gen_025,
+         hwt_050,
+         hwtdgwtk,
+         incdghh,
+         incg035,
+         macg020,
+         paa_030,
+         paadvdys)
+
+### Fix the names ###
+cchs <- cchs %>% 
+  rename(Drank_alcohol_12_mon = alc_010,
+         Drank_Alcohol_Frequency = alc_015,
+         Average_daily_alcohol_consumption = alwdvdly,
+         Weekly_consumption = alwdvwky,
+         Has_Asthma = ccc_015,
+         Has_COPD = ccc_030,
+         Has_Sleep_Apnea = ccc_035,
+         Has_scoliosis = ccc_040, 
+         Has_fibromyalgia = ccc_045,
+         Has_high_blood_pressure = ccc_065,
+         Has_Heart_Disease = ccc_085,
+         Has_Diabeties = ccc_095,
+         Has_Migraines = ccc_140,
+         Has_Cancer = ccc_135,
+         Has_Allergies = ccc_170,
+         Has_Anxiety = ccc_200,
+         Psycologist = cp2g030,
+         Age = dhhgage,
+         Sex = dhh_sex, 
+         Illicit_drug_use = drgdvla,
+         Illicit_drug_use1 = drgdvlac,
+         Marijuana_drug_use = drgdvlca,
+         Marijuana_drug_use1 = drgdvlcm,
+         Illicit_drug_use_12mon = drgdvyac,
+         Perceived_Health = gen_005,
+         Perceived_Mental_Health = gen_015,
+         Perceived_life_stress = gen_020,
+         Perceived_stress_at_work = gen_025,
+         Self_perceived_weight = hwt_050,
+         Weight_kg = hwtdgwtk,
+         Total_household_income = incdghh,
+         Personal_income = incg035,
+         Student_Status = macg020,
+         Sports_Fitness_Recreational = paa_030,
+         Weekly_Days_Physically_Active = paadvdys)
+         
+         
+### Clean the Dataset ###
+
+            
+cchs <- cchs %>% 
+  mutate(Age = case_when(
+    Age=="1"~ "12-14",
+    Age=="2" ~ "15-17",
+    Age=="3" ~ "18-19",
+    Age=="4" ~ "20-24",
+    Age=="5" ~ "25-29", 
+    Age=="6" ~ "30-34",
+    Age=="7" ~ "35-39",
+    Age=="8" ~ "40-44",
+    Age=="9" ~ "45-49",
+    Age=="10" ~ "50-54",
+    Age=="11" ~ "55-59",
+    Age=="12" ~ "60-64",
+    Age=="13" ~ "65-69",
+    Age=="14" ~ "70-74",
+    Age=="15" ~ "75-79",
+    Age=="16" ~ "80-84",
+    TRUE~ "NA")) 
+
+cchs <- cchs %>% 
+  mutate(Sex = case_when(
+    Sex=="1"~ "Male",
+    Sex=="2" ~ "Female",
+    TRUE~ "NA")) 
+
+cchs <- cchs %>% 
+  mutate(Illicit_drug_use_12mon = case_when(
+    Illicit_drug_use_12mon=="1"~ "Has used drugs",
+    Illicit_drug_use_12mon=="2" ~ "Has not used drugs",
+    TRUE~ "NA")) 
+
+cchs <- cchs %>% 
+  mutate(Perceived_life_stress = case_when(
+    Perceived_life_stress=="1"~ "Not at all stressful",
+    Perceived_life_stress=="2" ~ "Not very stressful",
+    Perceived_life_stress=="3"~ "A bit stressful",
+    Perceived_life_stress=="4" ~ "Quite a bit stressful",
+    Perceived_life_stress=="5" ~ "Extremely stressful",
+    TRUE~ "NA")) 
+
+cchs <- cchs %>% 
+  mutate(Self_perceived_weight = case_when(
+    Self_perceived_weight=="1"~ "Overweight",
+    Self_perceived_weight=="2" ~ "Underweight",
+    Self_perceived_weight=="3"~ "Just About Right",
+    TRUE~ "NA")) 
+    
+cchs <- cchs %>% 
+  mutate(Weekly_Days_Physically_Active = case_when(
+    Weekly_Days_Physically_Active=="1"~ "One",
+    Weekly_Days_Physically_Active=="2" ~ "Two",
+    Weekly_Days_Physically_Active=="3"~ "Three",
+    Weekly_Days_Physically_Active=="4"~ "Four",
+    Weekly_Days_Physically_Active=="5" ~ "Five",
+    Weekly_Days_Physically_Active=="6"~ "Six",
+    Weekly_Days_Physically_Active=="7"~ "Seven",
+    TRUE~ "NA"))     
+    
+cchs <- cchs %>% 
+  mutate(Perceived_Mental_Health = case_when(
+    Perceived_Mental_Health=="1"~ "1",
+    Perceived_Mental_Health=="2"~ "1",
+    Perceived_Mental_Health=="3"~ "1",
+    Perceived_Mental_Health=="4"~ "0",
+    Perceived_Mental_Health=="5"~ "0",
+    TRUE~ "NA")) 
+
+write_csv(cchs, "inputs/cchs.csv")            
+            

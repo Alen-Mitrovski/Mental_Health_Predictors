@@ -1,0 +1,131 @@
+---
+title: "Predictors of Poor Mental Health"
+author: "Alen Mitrovski"
+date: "09/12/2020"
+output:
+  pdf_document: default
+  bookdown::pdf_document2:
+    citation_package: natbib
+abstract: null
+bibliography: references.bib
+---
+
+```{r, echo = F, warning=F, message=F}
+library(tidyverse)
+library(gtsummary)
+library(cowplot)
+library(knitr)
+library(bookdown)
+```
+
+
+```{r, echo = F, warning=F, message=F}
+# read in cchs data through the Cleaning_Mental_Health_PS5 file in the inputs folder
+cchs <- read_csv("inputs/cchs.csv")
+```
+
+
+```{r, echo=F, message=F, warning=F}
+# create new variable which for some we plan to use for the analysis, others were
+# used to visualize the data for the reader
+cchs <- cchs %>% 
+  filter(Perceived_Mental_Health < 2)
+
+cchs_logit <- glm(Perceived_Mental_Health ~ Age +
+                   Sex + Illicit_drug_use_12mon + Perceived_life_stress + Self_perceived_weight + Weekly_Days_Physically_Active,
+                 data = cchs, family = binomial())
+```
+
+
+**Keywords**: Mental Health, Alcohol Abuse, Drug Usage, Canadian Health, Logistic Regression;
+
+
+# Introduction
+
+In this paper, we use [@citeR] to conduct our analysis.
+
+
+# Data
+
+```{r, echo = F, warning=F, message=F}
+cchs %>% ggplot(aes(Age, fill = Age)) + 
+  geom_bar() +
+  labs(title = "Figure 1: Distribution of Age Groups",
+       x = "Age Group", y = "Count",
+       caption = "Source: 2017-2018 CCHS") +
+  theme_classic() + 
+  scale_fill_grey()
+```
+
+
+```{r, echo = F, warning=F, message=F}
+cchs %>% ggplot(aes(Sex, fill = Sex)) + 
+  geom_bar() +
+  labs(title = "Figure 2: Distribution of Sex",
+       x = "Sex", y = "Count",
+       caption = "Source: 2017-2018 CCHS") +
+  theme_classic() + 
+  scale_fill_grey()
+```
+
+
+```{r, echo = F, warning=F, message=F}
+cchs_stress <- cchs %>%
+  filter(!is.na(Perceived_life_stress))
+cchs_stress %>% ggplot(aes(Perceived_life_stress, fill = Perceived_life_stress)) + 
+  geom_bar() +
+  labs(title = "Figure 3: Perceived Life Stress",
+       x = "Stress Level", y = "Count",
+       caption = "Source: 2017-2018 CCHS") +
+  theme_classic() +
+  theme(axis.text.x = element_text(size = 10, angle = 45, hjust = 1),
+        plot.title = element_text(size=12)) + 
+  scale_fill_grey()
+```
+
+
+```{r, echo = F, warning=F, message=F}
+cchs_weight <- cchs %>%
+  filter(!is.na(Self_perceived_weight))
+cchs_weight %>% ggplot(aes(Self_perceived_weight, fill = Self_perceived_weight)) + 
+  geom_bar() +
+  labs(title = "Figure 4: Self Perceived Weight",
+       x = "Weight Category", y = "Count",
+       caption = "Source: 2017-2018 CCHS") +
+  theme_classic() + 
+  scale_fill_grey()
+```
+
+
+```{r, echo = F, warning=F, message=F}
+cchs_drug <- cchs %>%
+  filter(!is.na(Illicit_drug_use_12mon))
+cchs_weight %>% ggplot(aes(Illicit_drug_use_12mon, fill = Illicit_drug_use_12mon)) + 
+  geom_bar() +
+  labs(title = "Figure 4: Drug Use (Last 12 Months)",
+       x = "Drug Use", y = "Count",
+       caption = "Source: 2017-2018 CCHS") +
+  theme_classic() + 
+  scale_fill_grey()
+```
+
+
+```{r, echo = F, warning=F, message=F}
+cchs_phys <- cchs %>%
+  filter(!is.na(Weekly_Days_Physically_Active))
+cchs_phys %>% ggplot(aes(Weekly_Days_Physically_Active, fill = Weekly_Days_Physically_Active)) + 
+  geom_bar() +
+  labs(title = "Figure 6: Weekly Days Physically Active",
+       x = "Active Days in a Week", y = "Count",
+       caption = "Source: 2017-2018 CCHS") +
+  theme_classic() + 
+  scale_fill_grey()
+```
+
+# Model
+
+This study uses a logistic regression model of the form:
+
+$$log \left( \frac{\hat{p}}{1-\hat{p}} \right) = \beta_1 + \beta_2*x_{PhysicalActivity} + \beta_3*x_{Sex} + \beta_4*x_{Weight} + \beta_5*x_{Stress} + \beta_6*x_{DrugUse} + \beta_7*x_{AgeGroup}$$
+
+# References
