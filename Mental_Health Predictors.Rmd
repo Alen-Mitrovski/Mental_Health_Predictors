@@ -6,7 +6,8 @@ output:
   pdf_document: default
   bookdown::pdf_document2:
     citation_package: natbib
-abstract: null
+abstract: Mental Health research is a rapidly growing field of study as rates of mental health problems in Canada have been increasing. In my report, I use a logistic regression model to examine the relationship between an individual’s mental health and other health related variables. From my results, I find that poor mental health is positively correlated with drug use, less physical activity, high stress, young, underweight and male individuals. These results are significant as they will aid us to understand the issue, focus on mitigating certain predictive variables and raise awareness in the scientific community. 
+
 bibliography: references.bib
 ---
 
@@ -37,7 +38,7 @@ cchs_logit <- glm(Perceived_Mental_Health ~ Age +
 ```
 
 
-**Keywords**: Mental Health, Alcohol Abuse, Drug Usage, Canadian Health, Logistic Regression;
+**Keywords**: Mental Health, Stress, Drug Usage, Canadian Health, Logistic Regression;
 
 
 # Introduction
@@ -135,6 +136,12 @@ cchs_phys %>% ggplot(aes(Weekly_Days_Physically_Active, fill = Weekly_Days_Physi
 ```
 
 
+# Model
+
+This study uses a logistic regression model of the form:
+
+$$log \left( \frac{\hat{p}}{1-\hat{p}} \right) = \beta_1 + \beta_2*x_{PhysicalActivity} + \beta_3*x_{Sex} + \beta_4*x_{Weight} + \beta_5*x_{Stress} + \beta_6*x_{DrugUse} + \beta_7*x_{AgeGroup}$$
+
 # Results
 
 ```{r, echo=F, message=F, warning=F}
@@ -167,17 +174,24 @@ logit_summary %>% ggplot(aes(term, estimate)) + geom_point() +
   theme_classic()
 ```
 
-Figure 9: Logistic Regression Outputs with Confidence Intervals Present
+Using the glm() function, the logit function for this study is:
+
+$$log \left( \frac{\hat{p}}{1-\hat{p}} \right) = -2.6 + -0.42*x_{PhysicalActivity} + 0.29*x_{Sex} + -1.18*x_{Weight} + -1.25*x_{Stress} + -0.89*x_{DrugUse} + 5.63*x_{AgeGroup}$$
+
+
+Figure 9: Logistic Regression Outputs with Confidence Intervals
 ```{r, echo=F, warning=F, message=F}
 # plot more detailed regression table, including Odds Ratios 
 gtsummary::tbl_regression(cchs_logit, intercept = T)
 ```
 
+# Discussion 
 
-# Model
+## Analysis
+Will be updated soon.
 
-This study uses a logistic regression model of the form:
+## Weaknesses
+Will be updated soon.
 
-$$log \left( \frac{\hat{p}}{1-\hat{p}} \right) = \beta_1 + \beta_2*x_{PhysicalActivity} + \beta_3*x_{Sex} + \beta_4*x_{Weight} + \beta_5*x_{Stress} + \beta_6*x_{DrugUse} + \beta_7*x_{AgeGroup}$$
 
 # References
